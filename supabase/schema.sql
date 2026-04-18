@@ -2,8 +2,9 @@
 -- La Batisienne — Schéma Supabase (état courant)
 -- Table : participants
 --
--- NOTE : si la table existe déjà, utilise plutôt le fichier
+-- NOTE : si la table existe déjà, utilise plutôt les migrations :
 --        supabase/migrations/0002_caracteres_array_et_carrelage.sql
+--        supabase/migrations/0003_rename_caracteres_et_score_nuisance.sql
 -- =====================================================================
 
 -- Table principale
@@ -17,12 +18,14 @@ create table if not exists public.participants (
   blase_double text,
   rencontre_double_sur_place boolean not null default false,
 
-  caractere_double text[] not null,
+  caracteres_double text[] not null,
 
   presence_samedi_soir boolean not null default false,
   presence_dimanche_midi boolean not null default false,
 
   couchage text not null,
+
+  score_nuisance integer not null default 0,
 
   constraint participants_nom_nonempty check (char_length(trim(nom)) > 0),
   constraint participants_prenom_nonempty check (char_length(trim(prenom)) > 0),
@@ -31,10 +34,10 @@ create table if not exists public.participants (
     or (blase_double is not null and char_length(trim(blase_double)) > 0)
   ),
   constraint participants_caractere_non_vide check (
-    array_length(caractere_double, 1) >= 1
+    array_length(caracteres_double, 1) >= 1
   ),
   constraint participants_caractere_valide check (
-    caractere_double <@ ARRAY[
+    caracteres_double <@ ARRAY[
       'Psychopathe du dancefloor',
       'Démon de la soif',
       'Génie du mal fatigué',
@@ -66,7 +69,8 @@ create table if not exists public.participants (
       'Un bout de carrelage',
       'Je rentre à mes risques et périls'
     )
-  )
+  ),
+  constraint participants_score_nuisance_nonneg check (score_nuisance >= 0)
 );
 
 create index if not exists participants_created_at_idx

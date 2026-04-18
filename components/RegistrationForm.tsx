@@ -1,13 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import {
   registerParticipant,
   type RegistrationInput,
 } from "@/app/actions";
-import { CARACTERES, COUCHAGES } from "@/lib/options";
+import {
+  CARACTERES,
+  CARACTERE_POINTS,
+  COUCHAGES,
+  scoreOf,
+  tierFor,
+  type Caractere,
+} from "@/lib/options";
+
+const TIER_STYLES: Record<string, string> = {
+  white: "border-white/25 bg-white/5 text-white/80",
+  blue: "border-neon-blue bg-neon-blue/10 text-neon-blue-soft shadow-glow-blue",
+  red: "border-neon-red bg-neon-red/10 text-neon-red-soft shadow-glow-red",
+  "red-max":
+    "border-neon-red bg-neon-red/20 text-white shadow-glow-red animate-pulseGlow",
+};
 
 type State = "idle" | "submitting" | "success" | "error";
 
@@ -31,6 +46,9 @@ export default function RegistrationForm() {
     );
   }
 
+  const score = useMemo(() => scoreOf(caracteres), [caracteres]);
+  const tier = useMemo(() => tierFor(score), [score]);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setState("submitting");
@@ -41,7 +59,7 @@ export default function RegistrationForm() {
       prenom,
       blase_double: rencontre ? null : blase,
       rencontre_double_sur_place: rencontre,
-      caractere_double: caracteres,
+      caracteres_double: caracteres,
       presence_samedi_soir: samedi === "oui",
       presence_dimanche_midi: dimanche === "oui",
       couchage,
@@ -52,8 +70,8 @@ export default function RegistrationForm() {
       setState("success");
       setMessage(
         res.count != null
-          ? `Bienvenue. Tu es le/la double n°${res.count}.`
-          : "Bienvenue dans le pèlerinage.",
+          ? `Bienvenue. Tu es le/la double n°${res.count}. Score de nuisance : ${res.score} pts.`
+          : `Bienvenue dans le pèlerinage. Score de nuisance : ${res.score} pts.`,
       );
       setNom("");
       setPrenom("");
@@ -151,9 +169,33 @@ export default function RegistrationForm() {
               {caracteres.length > 1 ? "s" : ""}
             </span>
           </div>
+
+          <motion.div
+            key={tier.label}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`mb-4 flex flex-col gap-2 rounded-2xl border px-4 py-3 sm:flex-row sm:items-center sm:justify-between ${TIER_STYLES[tier.accent]}`}
+            aria-live="polite"
+          >
+            <div className="flex items-baseline gap-2">
+              <span className="text-xs uppercase tracking-[0.25em] opacity-80">
+                Score de nuisance
+              </span>
+              <span className="font-display text-3xl tabular-nums">
+                {score}
+              </span>
+              <span className="text-sm opacity-80">pts</span>
+            </div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em]">
+              {tier.label}
+            </span>
+          </motion.div>
+
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {CARACTERES.map((c) => {
               const selected = caracteres.includes(c);
+              const pts = CARACTERE_POINTS[c as Caractere];
               return (
                 <label
                   key={c}
@@ -171,8 +213,21 @@ export default function RegistrationForm() {
                     onChange={() => toggleCaractere(c)}
                     className="mt-0.5 h-4 w-4 shrink-0 accent-neon-red"
                   />
-                  <span className="text-sm leading-snug text-white/90">
+                  <span className="flex-1 text-sm leading-snug text-white/90">
                     {c}
+                  </span>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${
+                      pts >= 100
+                        ? "bg-neon-red/20 text-neon-red-soft"
+                        : pts >= 50
+                          ? "bg-neon-red/10 text-neon-red-soft"
+                          : pts >= 25
+                            ? "bg-neon-blue/10 text-neon-blue-soft"
+                            : "bg-white/10 text-white/70"
+                    }`}
+                  >
+                    {pts} pts
                   </span>
                 </label>
               );

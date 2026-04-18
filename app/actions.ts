@@ -1,21 +1,21 @@
 "use server";
 
 import { getSupabaseServer } from "@/lib/supabase-server";
-import { CARACTERES, COUCHAGES } from "@/lib/options";
+import { CARACTERES, COUCHAGES, scoreOf } from "@/lib/options";
 
 export type RegistrationInput = {
   nom: string;
   prenom: string;
   blase_double: string | null;
   rencontre_double_sur_place: boolean;
-  caractere_double: string[];
+  caracteres_double: string[];
   presence_samedi_soir: boolean;
   presence_dimanche_midi: boolean;
   couchage: string;
 };
 
 export type RegistrationResult =
-  | { ok: true; count: number | null }
+  | { ok: true; count: number | null; score: number }
   | { ok: false; error: string };
 
 function clean(value: unknown, max = 120): string {
@@ -32,10 +32,10 @@ export async function registerParticipant(
   const couchage = clean(input.couchage, 80);
   const rencontre = Boolean(input.rencontre_double_sur_place);
 
-  const caracteres = Array.isArray(input.caractere_double)
+  const caracteres = Array.isArray(input.caracteres_double)
     ? Array.from(
         new Set(
-          input.caractere_double
+          input.caracteres_double
             .map((c) => clean(c, 120))
             .filter((c) => c.length > 0),
         ),
@@ -68,6 +68,8 @@ export async function registerParticipant(
     };
   }
 
+  const score = scoreOf(caracteres);
+
   const supabase = getSupabaseServer();
   if (!supabase) {
     return {
@@ -82,7 +84,8 @@ export async function registerParticipant(
     prenom,
     blase_double: rencontre ? null : blase,
     rencontre_double_sur_place: rencontre,
-    caractere_double: caracteres,
+    caracteres_double: caracteres,
+    score_nuisance: score,
     presence_samedi_soir: Boolean(input.presence_samedi_soir),
     presence_dimanche_midi: Boolean(input.presence_dimanche_midi),
     couchage,
@@ -96,7 +99,7 @@ export async function registerParticipant(
     .from("participants")
     .select("*", { count: "exact", head: true });
 
-  return { ok: true, count: count ?? null };
+  return { ok: true, count: count ?? null, score };
 }
 
 export async function getParticipantCount(): Promise<number | null> {
