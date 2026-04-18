@@ -7,21 +7,7 @@ import {
   registerParticipant,
   type RegistrationInput,
 } from "@/app/actions";
-
-const CARACTERES = [
-  "Psychopathe du dancefloor",
-  "Démon de la soif",
-  "Génie du mal fatigué",
-  "Destructeur de buffet",
-  "Mystique des enceintes",
-  "Autre",
-];
-
-const COUCHAGES = [
-  "Tente",
-  "Van/Camping-car",
-  "Je rentre à mes risques et périls",
-];
+import { CARACTERES, COUCHAGES } from "@/lib/options";
 
 type State = "idle" | "submitting" | "success" | "error";
 
@@ -30,12 +16,20 @@ export default function RegistrationForm() {
   const [prenom, setPrenom] = useState("");
   const [blase, setBlase] = useState("");
   const [rencontre, setRencontre] = useState(false);
-  const [caractere, setCaractere] = useState<string>(CARACTERES[0]);
+  const [caracteres, setCaracteres] = useState<string[]>([]);
   const [samedi, setSamedi] = useState<"oui" | "non">("oui");
   const [dimanche, setDimanche] = useState<"oui" | "non">("oui");
   const [couchage, setCouchage] = useState<string>(COUCHAGES[0]);
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState<string | null>(null);
+
+  function toggleCaractere(value: string) {
+    setCaracteres((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value],
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,7 +41,7 @@ export default function RegistrationForm() {
       prenom,
       blase_double: rencontre ? null : blase,
       rencontre_double_sur_place: rencontre,
-      caractere_double: caractere,
+      caractere_double: caracteres,
       presence_samedi_soir: samedi === "oui",
       presence_dimanche_midi: dimanche === "oui",
       couchage,
@@ -65,7 +59,7 @@ export default function RegistrationForm() {
       setPrenom("");
       setBlase("");
       setRencontre(false);
-      setCaractere(CARACTERES[0]);
+      setCaracteres([]);
       setSamedi("oui");
       setDimanche("oui");
       setCouchage(COUCHAGES[0]);
@@ -150,28 +144,39 @@ export default function RegistrationForm() {
         </div>
 
         <div className="mt-5">
-          <span className="label-dark">Caractère de mon double</span>
+          <div className="mb-1 flex items-baseline justify-between gap-3">
+            <span className="label-dark mb-0">Caractère de mon double</span>
+            <span className="text-xs text-white/50">
+              Plusieurs choix possibles · {caracteres.length} sélectionné
+              {caracteres.length > 1 ? "s" : ""}
+            </span>
+          </div>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {CARACTERES.map((c) => (
-              <label
-                key={c}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition ${
-                  caractere === c
-                    ? "border-neon-red bg-neon-red/10 shadow-glow-red"
-                    : "border-white/10 hover:border-white/25"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="caractere"
-                  value={c}
-                  checked={caractere === c}
-                  onChange={() => setCaractere(c)}
-                  className="h-4 w-4 accent-neon-red"
-                />
-                <span className="text-sm text-white/90">{c}</span>
-              </label>
-            ))}
+            {CARACTERES.map((c) => {
+              const selected = caracteres.includes(c);
+              return (
+                <label
+                  key={c}
+                  className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition ${
+                    selected
+                      ? "border-neon-red bg-neon-red/10 shadow-glow-red"
+                      : "border-white/10 hover:border-white/25"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    name="caractere"
+                    value={c}
+                    checked={selected}
+                    onChange={() => toggleCaractere(c)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-neon-red"
+                  />
+                  <span className="text-sm leading-snug text-white/90">
+                    {c}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </div>
 
