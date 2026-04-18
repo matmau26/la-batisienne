@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import Poster from "@/components/Poster";
 import Info from "@/components/Info";
 import Timeline from "@/components/Timeline";
 import RegistrationForm from "@/components/RegistrationForm";
@@ -13,6 +14,7 @@ export default async function HomePage() {
   return (
     <main className="relative">
       <Hero initialCount={initialCount} />
+      <Poster />
       <Info />
       <Timeline />
       <RegistrationForm />
