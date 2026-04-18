@@ -28,7 +28,9 @@ export default function SectionHeading({
       ) : null}
       <h2
         className={`font-display text-4xl leading-none sm:text-5xl md:text-6xl ${
-          accent === "red" ? "neon-text-red" : "neon-text-blue"
+          accent === "red"
+            ? "neon-text-red animate-flicker-red"
+            : "neon-text-blue animate-flicker-blue"
         }`}
       >
         {title}

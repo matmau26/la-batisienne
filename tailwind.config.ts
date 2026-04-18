@@ -43,6 +43,36 @@ const config: Config = {
             filter: "drop-shadow(0 0 2px rgba(255,23,68,0.3))",
           },
         },
+        flickerRed: {
+          "0%, 17%, 19%, 22%, 24%, 53%, 57%, 72%, 74%, 100%": {
+            opacity: "1",
+            filter:
+              "drop-shadow(0 0 6px rgba(255,23,68,0.95)) drop-shadow(0 0 22px rgba(255,23,68,0.55))",
+          },
+          "18%, 20%, 23%, 55%, 73%": {
+            opacity: "0.35",
+            filter: "drop-shadow(0 0 1px rgba(255,23,68,0.25))",
+          },
+          "40%": {
+            opacity: "0.7",
+            filter: "drop-shadow(0 0 4px rgba(255,23,68,0.5))",
+          },
+        },
+        flickerBlue: {
+          "0%, 14%, 16%, 27%, 29%, 48%, 50%, 66%, 68%, 100%": {
+            opacity: "1",
+            filter:
+              "drop-shadow(0 0 6px rgba(0,229,255,0.95)) drop-shadow(0 0 22px rgba(0,229,255,0.55))",
+          },
+          "15%, 28%, 49%, 67%": {
+            opacity: "0.35",
+            filter: "drop-shadow(0 0 1px rgba(0,229,255,0.25))",
+          },
+          "35%": {
+            opacity: "0.7",
+            filter: "drop-shadow(0 0 4px rgba(0,229,255,0.5))",
+          },
+        },
         pulseGlow: {
           "0%, 100%": {
             boxShadow:
@@ -60,6 +90,8 @@ const config: Config = {
       },
       animation: {
         flicker: "flicker 4s infinite",
+        "flicker-red": "flickerRed 4.3s infinite",
+        "flicker-blue": "flickerBlue 5.1s infinite",
         pulseGlow: "pulseGlow 2.8s ease-in-out infinite",
         floatY: "floatY 6s ease-in-out infinite",
       },
