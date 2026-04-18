@@ -24,7 +24,7 @@ const cards = [
         <span className="neon-text-red font-semibold">
           fortement recommandé
         </span>
-        . Tentes, vans, camping-cars bienvenus sur le grand terrain.
+        . Tentes, vans, camping-cars bienvenus sur le chemin.
       </>
     ),
   },
@@ -34,8 +34,10 @@ const cards = [
     body: (
       <>
         Amenez de quoi boire — une{" "}
-        <span className="neon-text-blue font-semibold">tireuse à bière</span>{" "}
-        est fournie sur place.
+        <span className="neon-text-blue font-semibold">
+          tireuse à bière et quelques bouteilles
+        </span>{" "}
+        seront fournies sur place, mais ce sera insuffisant.
       </>
     ),
   },
