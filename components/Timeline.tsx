@@ -14,7 +14,7 @@ const steps: Step[] = [
   {
     when: "Samedi — Fin d'après-midi",
     title: "Arrivée des doubles",
-    desc: "Les portails s'ouvrent, les vans débarquent, les tentes se dressent. Présentations sur fond de basses.",
+    desc: "Ouverture de l'arène, les vans débarquent, les tentes se dressent. Présentations sur fond de basses.",
     accent: "blue",
   },
   {
@@ -32,7 +32,7 @@ const steps: Step[] = [
   {
     when: "Dimanche — Après-midi",
     title: "Pool Party gros son",
-    desc: "Piscine, sono, bombes à eau et lunettes noires. Clôture en apothéose.",
+    desc: "Piscine, sono, bombes à eau et lunettes noires. Clôture en apothéose. Mon lundi est posé !",
     accent: "red",
   },
 ];
