@@ -9,11 +9,9 @@ import {
 } from "@/app/actions";
 import {
   CARACTERES,
-  CARACTERE_POINTS,
   COUCHAGES,
   scoreOf,
   tierFor,
-  type Caractere,
 } from "@/lib/options";
 
 const TIER_STYLES: Record<string, string> = {
@@ -195,11 +193,10 @@ export default function RegistrationForm() {
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {CARACTERES.map((c) => {
               const selected = caracteres.includes(c);
-              const pts = CARACTERE_POINTS[c as Caractere];
               return (
                 <label
                   key={c}
-                  className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition ${
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition ${
                     selected
                       ? "border-neon-red bg-neon-red/10 shadow-glow-red"
                       : "border-white/10 hover:border-white/25"
@@ -211,23 +208,10 @@ export default function RegistrationForm() {
                     value={c}
                     checked={selected}
                     onChange={() => toggleCaractere(c)}
-                    className="mt-0.5 h-4 w-4 shrink-0 accent-neon-red"
+                    className="h-4 w-4 shrink-0 accent-neon-red"
                   />
                   <span className="flex-1 text-sm leading-snug text-white/90">
                     {c}
-                  </span>
-                  <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${
-                      pts >= 100
-                        ? "bg-neon-red/20 text-neon-red-soft"
-                        : pts >= 50
-                          ? "bg-neon-red/10 text-neon-red-soft"
-                          : pts >= 25
-                            ? "bg-neon-blue/10 text-neon-blue-soft"
-                            : "bg-white/10 text-white/70"
-                    }`}
-                  >
-                    {pts} pts
                   </span>
                 </label>
               );
