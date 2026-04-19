@@ -5,11 +5,17 @@ import { tierFor } from "@/lib/options";
 
 export type Double = {
   prenom: string;
+  nom: string;
   blase_double: string | null;
   rencontre_double_sur_place: boolean;
   caracteres_double: string[];
   score_nuisance: number;
 };
+
+function displayName(prenom: string, nom: string): string {
+  const initial = nom.trim().charAt(0).toUpperCase();
+  return initial ? `${prenom} ${initial}.` : prenom;
+}
 
 const containerVariants: Variants = {
   hidden: {},
@@ -108,7 +114,7 @@ function DoubleCard({ d }: { d: Double }) {
             Prénom du vaisseau
           </p>
           <p className="mt-0.5 text-sm font-medium text-white/80">
-            {d.prenom}
+            {displayName(d.prenom, d.nom)}
           </p>
           <h3
             className={`mt-3 font-display text-2xl leading-tight sm:text-3xl ${
@@ -186,7 +192,7 @@ export default function DoublesGallery({ initialDoubles }: Props) {
       className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
     >
       {initialDoubles.map((d, i) => (
-        <DoubleCard key={`${d.prenom}-${i}`} d={d} />
+        <DoubleCard key={`${d.prenom}-${d.nom}-${i}`} d={d} />
       ))}
     </motion.ul>
   );

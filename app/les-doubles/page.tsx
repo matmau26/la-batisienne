@@ -18,7 +18,7 @@ async function getDoubles(): Promise<Double[]> {
   const { data, error } = await supabase
     .from("participants")
     .select(
-      "prenom, blase_double, rencontre_double_sur_place, caracteres_double, score_nuisance",
+      "prenom, nom, blase_double, rencontre_double_sur_place, caracteres_double, score_nuisance",
     )
     .order("score_nuisance", { ascending: false });
   if (error || !data) return [];
