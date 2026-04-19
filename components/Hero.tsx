@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import Counter from "./Counter";
 
@@ -55,9 +56,24 @@ export default function Hero({ initialCount }: Props) {
         </motion.div>
 
         <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.58 }}
+          className="mt-4"
+        >
+          <Link
+            href="/les-doubles"
+            className="btn-glitch"
+            data-text="Inspecter les dossiers (Voir les Doubles)"
+          >
+            Inspecter les dossiers (Voir les Doubles)
+          </Link>
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.65 }}
+          transition={{ duration: 0.8, delay: 0.72 }}
           className="mt-6 flex flex-col items-center gap-3 sm:mt-8 sm:flex-row"
         >
           <a
